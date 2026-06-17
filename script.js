@@ -1,14 +1,19 @@
 import { db } from "./firebase-config.js";
 import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// 1. DEFINE DOM ELEMENTS FIRST (Fixes the ReferenceError)
+const awardGrid = document.getElementById('awardGrid');
+const addAwardBtn = document.getElementById('addAwardBtn');
+const wall = document.getElementById('wall');
+const noteForm = document.getElementById('noteForm');
+
 // A single reference to store our live yearbook data
 const boardDocRef = doc(db, "yearbook", "sectionD_live");
 
 // ==========================================
-// 1. FIREBASE REAL-TIME SYNCING ENGINE
+// 2. FIREBASE REAL-TIME SYNCING ENGINE
 // ==========================================
 
-// This function scans your lists and pushes the updated HTML to Firebase
 function saveCurrentStateToFirebase() {
   updateDoc(boardDocRef, {
     awardsHtml: awardGrid.innerHTML,
@@ -18,10 +23,9 @@ function saveCurrentStateToFirebase() {
   });
 }
 
-// Listens to the database. If anyone changes anything anywhere, your screen updates instantly
+// Listens to the database. Updates instantly across screens.
 onSnapshot(boardDocRef, (snapshot) => {
   if (!snapshot.exists()) {
-    // If the database is completely empty (first run), seed it with your current HTML layout
     saveCurrentStateToFirebase();
     return;
   }
@@ -32,13 +36,9 @@ onSnapshot(boardDocRef, (snapshot) => {
   if (!document.activeElement || !document.activeElement.hasAttribute("contenteditable")) {
     if (data.awardsHtml) {
       awardGrid.innerHTML = data.awardsHtml;
-      // Re-hook the delete buttons for the synced elements
-      document.querySelectorAll('.award-card').forEach(wireRemove);
     }
     if (data.wallHtml) {
       wall.innerHTML = data.wallHtml;
-      // Re-hook the delete buttons for the synced notes
-      document.querySelectorAll('.note').forEach(wireNoteRemove);
     }
   }
 });
@@ -52,10 +52,9 @@ document.body.addEventListener("input", (e) => {
 
 
 // ==========================================
-// 2. YOUR ORIGINAL UI & NAVIGATION CODE
+// 3. YOUR ORIGINAL UI & NAVIGATION CODE
 // ==========================================
 
-// tab nav active state
 const sections = document.querySelectorAll('section[id]');
 const tabs = document.querySelectorAll('.tabnav .tab');
 
@@ -70,7 +69,6 @@ function setActiveTab() {
 window.addEventListener('scroll', setActiveTab, { passive: true });
 setActiveTab();
 
-// generic reveal on scroll
 const revealEls = document.querySelectorAll('.t-entry, .reveal');
 const obs = new IntersectionObserver((entries) => {
   entries.forEach(e => {
@@ -79,7 +77,6 @@ const obs = new IntersectionObserver((entries) => {
 }, { threshold: 0.2 });
 revealEls.forEach(el => obs.observe(el));
 
-// hero doodles fade in staggered
 window.addEventListener('load', () => {
   document.getElementById('doodle1').classList.add('show');
   setTimeout(() => document.getElementById('doodle2').classList.add('show'), 350);
@@ -88,24 +85,8 @@ window.addEventListener('load', () => {
 
 
 // ==========================================
-// 3. SHOUTOUT WALL CODE (WITH FIREBASE INTEGRATION)
+// 4. SHOUTOUT WALL CODE (WITH CLEAN DELEGATION)
 // ==========================================
-const wall = document.getElementById('wall');
-const noteForm = document.getElementById('noteForm');
-
-function wireNoteRemove(note) {
-  const x = note.querySelector('.note-remove');
-  if (x) {
-    // Replaced the simple .remove() with one that saves the missing element state to Firebase
-    x.replaceWith(x.cloneNode(true)); // Prevents attaching duplicate click event listeners
-    const newX = note.querySelector('.note-remove');
-    newX.addEventListener('click', () => {
-      note.remove();
-      saveCurrentStateToFirebase();
-    });
-  }
-}
-document.querySelectorAll('.note').forEach(wireNoteRemove);
 
 noteForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -124,36 +105,29 @@ noteForm.addEventListener('submit', (e) => {
     '<div class="from" contenteditable="true" spellcheck="false">— ' + safeFrom + '</div>';
     
   wall.appendChild(note);
-  wireNoteRemove(note);
   
   document.getElementById('noteText').value = '';
   document.getElementById('noteFrom').value = '';
   
-  // Save to cloud immediately
   saveCurrentStateToFirebase();
-  
   note.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// Dynamic event delegation handler for deleting notes
+wall.addEventListener('click', (e) => {
+  if (e.target.classList.contains('note-remove') || e.target.classList.contains('remove-x')) {
+    const targetNote = e.target.closest('.note');
+    if (targetNote) {
+      targetNote.remove();
+      saveCurrentStateToFirebase();
+    }
+  }
 });
 
 
 // ==========================================
-// 4. SUPERLATIVES CARDS CODE (WITH FIREBASE INTEGRATION)
+// 5. SUPERLATIVES CARDS CODE (WITH CLEAN DELEGATION)
 // ==========================================
-const awardGrid = document.getElementById('awardGrid');
-const addAwardBtn = document.getElementById('addAwardBtn');
-
-function wireRemove(card) {
-  const x = card.querySelector('.remove-x');
-  if (x) {
-    x.replaceWith(x.cloneNode(true)); // Prevents attaching duplicate click event listeners
-    const newX = card.querySelector('.remove-x');
-    newX.addEventListener('click', () => {
-      card.remove();
-      saveCurrentStateToFirebase();
-    });
-  }
-}
-document.querySelectorAll('.award-card').forEach(wireRemove);
 
 addAwardBtn.addEventListener('click', () => {
   const card = document.createElement('div');
@@ -165,11 +139,20 @@ addAwardBtn.addEventListener('click', () => {
     '<div class="award-note" contenteditable="true" spellcheck="false" data-placeholder="Why? (optional)"></div>';
     
   awardGrid.appendChild(card);
-  wireRemove(card);
   
-  // Save new card shell to cloud immediately
   saveCurrentStateToFirebase();
   
   card.querySelector('.award-title').focus();
   card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// Dynamic event delegation handler for deleting superlative cards
+awardGrid.addEventListener('click', (e) => {
+  if (e.target.classList.contains('remove-x')) {
+    const targetCard = e.target.closest('.award-card');
+    if (targetCard) {
+      targetCard.remove();
+      saveCurrentStateToFirebase();
+    }
+  }
 });
