@@ -12,7 +12,7 @@ const addAwardBtn = document.getElementById('addAwardBtn');
 // A single reference to store our live yearbook data
 const boardDocRef = doc(db, "yearbook", "sectionD_live");
 
-// Helper function to see if the user is typing inside a specific section
+// Helper function to see if the user is typing inside a specific container
 function isTypingInside(container) {
   return container.contains(document.activeElement) && document.activeElement.hasAttribute("contenteditable");
 }
@@ -30,10 +30,9 @@ function saveCurrentStateToFirebase() {
   });
 }
 
-// Listens to the database. Updates sections independently without hijacking your layout view.
+// Listens to the database. Updates sections independently without breaking focus.
 onSnapshot(boardDocRef, (snapshot) => {
   if (!snapshot.exists()) {
-    // Seed database if entirely empty
     saveCurrentStateToFirebase();
     return;
   }
@@ -60,7 +59,7 @@ document.body.addEventListener("input", (e) => {
 
 
 // ==========================================
-// 3. ORIGINAL UI & NAVIGATION CODE
+// 3. YOUR ORIGINAL UI & NAVIGATION CODE
 // ==========================================
 
 const sections = document.querySelectorAll('section[id]');
@@ -93,7 +92,7 @@ window.addEventListener('load', () => {
 
 
 // ==========================================
-// 4. SHOUTOUT WALL CODE (CLEAN DELEGATION)
+// 4. SHOUTOUT WALL CODE (WITH CLEAN DELEGATION)
 // ==========================================
 
 noteForm.addEventListener('submit', (e) => {
@@ -121,7 +120,7 @@ noteForm.addEventListener('submit', (e) => {
   note.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
-// Click delegation: handles deleting notes dynamically without binding heavy event loops
+// Click delegation: captures deletions dynamically without needing to re-hook functions
 wall.addEventListener('click', (e) => {
   if (e.target.classList.contains('note-remove') || e.target.classList.contains('remove-x')) {
     const targetNote = e.target.closest('.note');
@@ -134,7 +133,7 @@ wall.addEventListener('click', (e) => {
 
 
 // ==========================================
-// 5. SUPERLATIVES CARDS CODE (CLEAN DELEGATION)
+// 5. SUPERLATIVES CARDS CODE (WITH CLEAN DELEGATION)
 // ==========================================
 
 addAwardBtn.addEventListener('click', () => {
@@ -154,7 +153,7 @@ addAwardBtn.addEventListener('click', () => {
   card.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
-// Click delegation: handles deleting cards dynamically without binding heavy event loops
+// Click delegation: captures deletions dynamically without needing to re-hook functions
 awardGrid.addEventListener('click', (e) => {
   if (e.target.classList.contains('remove-x')) {
     const targetCard = e.target.closest('.award-card');
