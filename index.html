@@ -85,44 +85,8 @@
     </div>
     <p class="section-sub">unofficial, undisputed, voted on by absolutely no one</p>
 
-    <div class="award-grid" id="awardGrid">
-      <!-- Card 1 -->
-      <div class="award-card" data-id="late"><div class="pin"></div><span class="remove-x">&times;</span>
-        <div class="award-title" contenteditable="true" spellcheck="false">Most Likely to Be Late</div>
-        <div class="award-name" contenteditable="true" spellcheck="false" data-placeholder="Type Name...">Alex M.</div>
-        <div class="award-note" contenteditable="true" spellcheck="false">Has a perfect track record of walking in right as the bell finishes ringing with iced coffee.</div>
-      </div>
-      <!-- Card 2 -->
-      <div class="award-card" data-id="gcmvp"><div class="pin"></div><span class="remove-x">&times;</span>
-        <div class="award-title" contenteditable="true" spellcheck="false">Group Chat MVP</div>
-        <div class="award-name" contenteditable="true" spellcheck="false" data-placeholder="Type Name...">Sam W.</div>
-        <div class="award-note" contenteditable="true" spellcheck="false">Single-handedly kept everyone updated on homework nobody else wrote down.</div>
-      </div>
-      <!-- Card 3 -->
-      <div class="award-card" data-id="gaslighter"><div class="pin"></div><span class="remove-x">&times;</span>
-        <div class="award-title" contenteditable="true" spellcheck="false">Best Gaslighter</div>
-        <div class="award-name" contenteditable="true" spellcheck="false" data-placeholder="Type Name...">Jordan K.</div>
-        <div class="award-note" contenteditable="true" spellcheck="false">Convinced half the class that an exam was canceled when it definitely was not.</div>
-      </div>
-      <!-- Card 4 -->
-      <div class="award-card" data-id="laughs"><div class="pin"></div><span class="remove-x">&times;</span>
-        <div class="award-title" contenteditable="true" spellcheck="false">Contagious Laugh Award</div>
-        <div class="award-name" contenteditable="true" spellcheck="false" data-placeholder="Type Name...">Maya L.</div>
-        <div class="award-note" contenteditable="true" spellcheck="false">You can hear her laughing from across the entire hallway during third period.</div>
-      </div>
-      <!-- Card 5 -->
-      <div class="award-card" data-id="tesadabi"><div class="pin"></div><span class="remove-x">&times;</span>
-        <div class="award-title" contenteditable="true" spellcheck="false">The Unfiltered Tesadabi</div>
-        <div class="award-name" contenteditable="true" spellcheck="false" data-placeholder="Type Name...">Chris P.</div>
-        <div class="award-note" contenteditable="true" spellcheck="false">Zero filter, zero regrets, full commitment to the bit.</div>
-      </div>
-      <!-- Card 6 -->
-      <div class="award-card" data-id="airpods"><div class="pin"></div><span class="remove-x">&times;</span>
-        <div class="award-title" contenteditable="true" spellcheck="false">Most Likely Typing on iPad with AirPods In</div>
-        <div class="award-name" contenteditable="true" spellcheck="false" data-placeholder="Type Name...">Taylor R.</div>
-        <div class="award-note" contenteditable="true" spellcheck="false">Nods along to conversations they absolutely cannot hear.</div>
-      </div>
-    </div>
+    <!-- FIXED: Empty container so it relies completely on Firebase live data -->
+    <div class="award-grid" id="awardGrid"></div>
 
     <button class="add-award-btn" id="addAwardBtn" type="button">+ Add a category</button>
     <p class="form-hint" style="margin-top:10px;">Tap any name to edit it live. Changes sync instantly to everyone's layout view!</p>
@@ -155,11 +119,8 @@
     </div>
     <p class="section-sub">things people actually wanted to say before summer hit</p>
 
-    <div class="wall" id="wall">
-      <div class="note"><span class="remove-x note-remove">&times;</span><div class="note-text" contenteditable="true" spellcheck="false">Thank you for letting me copy your notes literally every single week. I owe you my entire GPA.</div><div class="from" contenteditable="true" spellcheck="false">— anonymous, probably</div></div>
-      <div class="note"><span class="remove-x note-remove">&times;</span><div class="note-text" contenteditable="true" spellcheck="false">Section D is the only reason 8am classes were survivable. Will miss the chaos.</div><div class="from" contenteditable="true" spellcheck="false">— back row, forever</div></div>
-      <div class="note"><span class="remove-x note-remove">&times;</span><div class="note-text" contenteditable="true" spellcheck="false">Can't believe we went from "who is that" in September to inseparable by June. Wild year.</div><div class="from" contenteditable="true" spellcheck="false">— someone who sat near the window</div></div>
-    </div>
+    <!-- FIXED: Empty container so it relies completely on Firebase live data -->
+    <div class="wall" id="wall"></div>
 
     <form class="add-note-form" id="noteForm">
       <div class="row">
